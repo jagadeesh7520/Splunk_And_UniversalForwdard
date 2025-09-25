@@ -1,145 +1,87 @@
-Step 1: Download and Install VirtualBox
-
+#Step 1: Download and Install VirtualBox
 Go to the official VirtualBox website: https://www.virtualbox.org/wiki/Downloads
-
 Download the VirtualBox platform package for your OS (Windows/Linux/macOS).
-
 Install VirtualBox:
-
 Windows: Run the .exe and follow the installer prompts.
-
 Linux: Use your package manager (sudo apt install virtualbox for Ubuntu/Debian).
-
 Once installed, open VirtualBox and check the version to ensure installation is successful.
 
-Step 2: Download Ubuntu ISO
-
+#Step 2: Download Ubuntu ISO
 Go to the official Ubuntu website: https://ubuntu.com/download/desktop
-
 Download the Ubuntu 22.04 LTS ISO (stable and supported).
-
 Save the ISO in a location easy to access from VirtualBox.
-
 Step 3: Create a Virtual Machine for Ubuntu
 
 Open VirtualBox → Click New.
-
 Set:
-
 Name: Ubuntu-Splunk
-
 Type: Linux
-
 Version: Ubuntu (64-bit)
-
 Allocate memory (RAM): 4096 MB or more for Splunk.
-
 Create a virtual hard disk:
-
 Type: VDI
-
 Storage: Dynamically allocated
-
 Size: 50 GB or more
-
 Finish creation.
 
-Step 4: Install Ubuntu in VirtualBox
-
+#Step 4: Install Ubuntu in VirtualBox
 Select your VM → Click Settings → Storage → Empty → Choose a disk file → Select the Ubuntu ISO.
-
 Start the VM → Ubuntu installer will boot.
-
 Install Ubuntu:
-
 Language: English
-
 Updates: Normal installation + download updates
-
 Disk: Use entire disk
-
 Create username/password (e.g., ubuntu / Password123)
-
 Complete installation → Remove ISO in VirtualBox → Reboot.
 
-Step 5: Update Ubuntu and Install Required Packages
-
+#Step 5: Update Ubuntu and Install Required Packages
 Open Terminal in Ubuntu and run:
-
 sudo apt update && sudo apt upgrade -y
 sudo apt install wget curl vim net-tools -y
 
-Step 6: Download and Install Splunk Enterprise
+#Step 6: Download and Install Splunk Enterprise
 
 Go to Splunk download page: https://www.splunk.com/en_us/download/splunk-enterprise.html
-
 Download the Linux (deb) version using wget:
-
 wget -O splunk-9.0.0-amd64.deb 'https://www.splunk.com/page/download_track?file=9.0.0/linux/splunk-9.0.0-amd64.deb&ac=&wget=true&name=wget&platform=Linux&architecture=x86_64&version=9.0.0&product=splunk&typed=release'
-
-
 Install Splunk:
-
 sudo dpkg -i splunk-9.0.0-amd64.deb
-
-
 Start Splunk and accept license:
-
 sudo /opt/splunk/bin/splunk start --accept-license
 sudo /opt/splunk/bin/splunk enable boot-start
-
-
 Splunk default access:
 
 URL: http://<VM_IP>:8000
 
 Username: admin
-
 Password: Set your password during first login
 
-Step 7: Install Splunk Universal Forwarder on Another VM or Same VM
+#Step 7: Install Splunk Universal Forwarder on Another VM or Same VM
 
 Go to: https://www.splunk.com/en_us/download/universal-forwarder.html
-
-Download Universal Forwarder (UF) for Linux (deb).
+Download Universal Forwarder (UF) for Linux (deb)
 
 Install UF:
-
 wget -O splunkforwarder-9.0.0-amd64.deb 'URL_from_splunk_download'
 sudo dpkg -i splunkforwarder-9.0.0-amd64.deb
-
-
 Start UF:
-
 sudo /opt/splunkforwarder/bin/splunk start --accept-license
 sudo /opt/splunkforwarder/bin/splunk enable boot-start
 
-Step 8: Configure UF to Send Logs to Splunk Enterprise
-
+#Step 8: Configure UF to Send Logs to Splunk Enterprise
 On UF machine, configure Splunk Enterprise as the receiving server:
-
 sudo /opt/splunkforwarder/bin/splunk add forward-server <Splunk_Server_IP>:9997
-
-
 Add files or directories to monitor:
-
 sudo /opt/splunkforwarder/bin/splunk add monitor /var/log
-
-
 Restart UF:
-
 sudo /opt/splunkforwarder/bin/splunk restart
 
-Step 9: Configure Splunk Enterprise to Receive Data
-
+#Step 9: Configure Splunk Enterprise to Receive Data
 Log in to Splunk Enterprise UI → Settings → Forwarding and receiving → Add new receiving port.
-
 Default: 9997 TCP for UF.
-
 Check network/firewall rules to ensure VM can access Splunk port.
 
-Step 10: Verify Data Flow
-
+#Step 10: Verify Data Flow
 In Splunk Enterprise UI → Search & Reporting → Search for index=_internal or monitored log files.
-
 You should see logs coming from Universal Forwarder.
+
